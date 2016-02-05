@@ -2,18 +2,13 @@
 # Problem Set 2
 # February 11, 2016
 
+#### Problem 1 ####
+
 # The function should take as an input (i) a matrix or vector of election returns and 
 # (ii) an option (or options) that controls whether the m statistic should be calculated, 
 # the d statistic should be calculated, or both. 
 
 # The output should be a list containing the results, including the full digit distribution.
-
-# Practice vector of electoral returns
-set.seed(10)
-vote.shares <- sample(10000:99999, 50, replace=T)
-
-vote.matrix <- matrix(vote.shares, nrow=10)
-wrong.matrix <- matrix(c("a","b","c","d"), nrow=2)
 
 violations_calculator <- function(input, Leemis=T, ChoGains=T){
   # Ensuring user inputs electoral returns in proper manner
@@ -52,10 +47,35 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
     final_list <- c(final_list, d_statistic=d)
   }
   
-  print(final_list)
-
-    
+  # Output. Distribution table will always be reported
+  return(final_list)  
 } 
+
+# Checking to see how the function does 
+# set.seed(10)
+# vote.shares <- sample(10000:99999, 50, replace=T)
+# 
+# vote.matrix <- matrix(vote.shares, nrow=10)
+# wrong.matrix <- matrix(c("a","b","c","d"), nrow=2)
+# 
+# violations_calculator(vote.shares) # works
+# violations_calculator(vote.matrix) # works, matrix converted to vector within function
+# violations_calculator(wrong.matrix) # won't work, not all integers
+# violations_calculator(vote.shares, Leemis=T, ChoGains=F)
+
+
+#### Problem 2 ####
+print.benfords <- function(){
+  our.table <- t(data.frame("0.083***", "0.257","* denotes p<0.1, **: p<0.05, ***:p<0.01"))
+  rownames(our.table) <- c("Leemis m","Cho-Gains d","")
+  colnames(our.table) <- "Statistic"
+  
+  
+}
+
+# rbind(table(final.list), c("1***",2,3,4,5))
+
+
 
 
 
