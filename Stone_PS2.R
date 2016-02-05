@@ -2,6 +2,8 @@
 # Problem Set 2
 # February 11, 2016
 
+setwd("~/github/PS2") # Setting working directory
+
 #### Problem 1 ####
 
 # The function should take as an input (i) a matrix or vector of election returns and 
@@ -100,7 +102,11 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
 
 # rbind(table(final.list), c("1***",2,3,4,5))
 
-votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
+# More practice
+# votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
 
-
+# Writing table output to a csv using sink() 
+sink(file="tableoutput.csv") # Specify the file (within current working directory defined at top)
+print.benfords(votes2) # Output of this, the table, will be saved to the csv
+sink() # Closing diversion of output to csv
 
