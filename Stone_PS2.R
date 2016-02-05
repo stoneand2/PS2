@@ -34,6 +34,18 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
     }
   }
   print(input)
+  
+  # Now, turning to calculating our statistics of interest
+  # Leemis first
+  # First, creating frequency table of distribution of all first significant digits
+  first_digit_dist <- prop.table(table(substr(input, start=1, stop=1)))
+  # Then, calculating the Leemis m statistic
+  m <- max(first_digit_dist - log10(1 + 1/c(1:9)))
+  # Assigning these to our output list
+  final_list <- list(digit_distribution=first_digit_dist, m_statistic=m)
+  print(final_list)
+  
+  
 } 
 
 
