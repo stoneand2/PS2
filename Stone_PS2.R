@@ -65,17 +65,42 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
 
 
 #### Problem 2 ####
-print.benfords <- function(){
-  our.table <- t(data.frame("0.083***", "0.257","* denotes p<0.1, **: p<0.05, ***:p<0.01"))
-  rownames(our.table) <- c("Leemis m","Cho-Gains d","")
-  colnames(our.table) <- "Statistic"
+print.benfords <- function(input, Leemis=T, ChoGains=T){
+  # Recursively calling earlier function with inputs as specified by this function's arguments
+  earlier_list <- violations_calculator(input, Leemis, ChoGains)
+  # Critical values for each statistic
+  leemis_cutoffs <- c(.851, .967, 1.212)
+  cho_gains_cutoffs <- c(1.212, 1.330, 1.569)
+  # Vector of stars
+  stars <- c("","*","**","***")
   
+  if(Leemis==T){
+    leemis_critical <- sum(earlier_list$m_statistic > leemis_cutoffs) 
+    leemis_stars <- stars[leemis_critical + 1]
+  }
+  if(ChoGains==T){
+    chogains_critical <- sum(earlier_list$d_statistic > cho_gains_cutoffs) 
+    chogains_stars <- stars[chogains_critical + 1]
+  }
   
+  our.table <- t(data.frame("* denotes p<0.1, **: p<0.05, ***:p<0.01"))
+  rownames(our.table) <- c("")
+  colnames(our.table) <- "Statistic"  
+  
+  if(Leemis==T){
+    our.table <- rbind(paste(round(earlier_list$m_statistic,5), leemis_stars, sep=""), our.table)
+    rownames(our.table)[1] <- c("Leemis m")
+  }
+  if(ChoGains==T){
+    our.table <- rbind(paste(round(earlier_list$d_statistic,5), chogains_stars, sep=""), our.table)
+    rownames(our.table)[1] <- c("Cho gains d")
+  }
+  print(our.table)
 }
 
 # rbind(table(final.list), c("1***",2,3,4,5))
 
-
+votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
 
 
 
