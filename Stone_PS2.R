@@ -6,11 +6,20 @@ setwd("~/github/PS2") # Setting working directory
 
 #### Problem 1 ####
 
-# The function should take as an input (i) a matrix or vector of election returns and 
-# (ii) an option (or options) that controls whether the m statistic should be calculated, 
-# the d statistic should be calculated, or both. 
-
-# The output should be a list containing the results, including the full digit distribution.
+## Function for calculating Leemis m and Cho Gains d statistics
+#'
+#' This function takes an input of electoral returns and (optionally) calculates the corresponding 
+#' Leemis' m and Cho Gains' d statistics.
+#' @param input An object with the class integer or matrix. If matrix, should be all integer values.
+#' @param Leemis Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' calculate and return the Leemis' m statistic.
+#' @param ChoGains Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' calculate and return the Cho Gains' d statistic.
+#' @return A list with three elements: a frequency table of distribution of all first significant 
+#' digits of the elements within input, (if Leemis=T) the Leemis' m statistic, (if ChoGains=T) the
+#' Cho Gains' d statistic.
+#' 
+#' @author Andy Stone.
 
 violations_calculator <- function(input, Leemis=T, ChoGains=T){
   # Ensuring user inputs electoral returns in proper manner
@@ -67,6 +76,23 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
 
 
 #### Problem 2 ####
+
+## Function for hypothesis testing of Leemis m and Cho Gains d statistics
+#'
+#' This function takes an input of electoral returns and (optionally) conducts a hypothesis test
+#' of electoral fraud utilizing Leemis' m and Cho Gains' d statistics. This function recursively
+#' calls the violations_calculator() defined above.
+#' @param input An object with the class integer or matrix. If matrix, should be all integer values.
+#' @param Leemis Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' test the null hypothesis of no electoral fraud using the Leemis' m statistic.
+#' @param ChoGains Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' test the null hypothesis of no electoral fraud using the Cho Gains' d statistic.
+#' @return A table that denotes the name of each test statistic, the value of the test statistic,
+#' asterisks denoting the statistical significance of the test statistic, and a legend explaining
+#' the level of statistical significance the asterisks denote.  
+#' 
+#' @author Andy Stone.
+
 print.benfords <- function(input, Leemis=T, ChoGains=T){
   # Recursively calling earlier function with inputs as specified by this function's arguments
   earlier_list <- violations_calculator(input, Leemis, ChoGains)
@@ -100,13 +126,44 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
   print(our.table)
 }
 
-# rbind(table(final.list), c("1***",2,3,4,5))
+## Function for writing output of print.benfords() to a .csv
+#'
+#' This function takes an input of electoral returns, optional arguments to conduct hypothesis 
+#' tests of electoral fraud utilizing Leemis' m and Cho Gains' d statistics, a directory path
+#' within which to save a table with output of these hypothesis tests, and an optional argument
+#' to set the name (and type) of the file the table will save to (defaults to table.csv). It
+#' recursively calls print.benfords(), which in turn recursively calls violations_calculator().
+#' @param input An object with the class integer or matrix. If matrix, should be all integer values.
+#' @param Leemis Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' report the results of the hypothesis test of no electoral fraud using the Leemis' m statistic.
+#' @param ChoGains Takes the value of TRUE or FALSE, where TRUE indicates that the function should
+#' report the results of the hypothesis test of no electoral fraud using the Cho Gains' d statistic.
+#' @param directory The directory on the hard drive in which the table output should be saved.
+#' @param filename The file within which the table should be saved in. Default is table.csv.
+#' 
+#' @author Andy Stone.
 
-# More practice
+sink.benfords <- function(input, Leemis=T, ChoGains=T, directory=NULL, filename="/table.csv"){
+  # First, an if else statement to check whether the user inputs a valid directory to save .csv within.
+  # If directory exists, proceed with process. Call sink to divert output from print.benfords()
+  # into directory and saved into filename. Then call print.benfords(). Then close sink() to end 
+  # connection.
+  # If directory doesn't exist, stops evaluation of function and asks user to specify valid path.
+  if (file.exists(directory) == T){
+    sink(file=paste(directory, filename, sep=""))
+    print.benfords(input, Leemis, ChoGains)
+    sink()
+  } else{
+    stop("Invalid directory. Please specify a valid directory to save the file within.")
+  } 
+}
+
 # votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
+# sink.benfords(input=votes2, directory="~/github/PS2",filename="/tableoutput.csv")
 
-# Writing table output to a csv using sink() 
-sink(file="tableoutput.csv") # Specify the file (within current working directory defined at top)
-print.benfords(votes2) # Output of this, the table, will be saved to the csv
-sink() # Closing diversion of output to csv
+
+
+
+
+
 
