@@ -68,11 +68,16 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
 # 
 # vote.matrix <- matrix(vote.shares, nrow=10)
 # wrong.matrix <- matrix(c("a","b","c","d"), nrow=2)
+# a.dataframe <- data.frame(c(1,2,3,4))
 # 
 # violations_calculator(vote.shares) # works
 # violations_calculator(vote.matrix) # works, matrix converted to vector within function
 # violations_calculator(wrong.matrix) # won't work, not all integers
-# violations_calculator(vote.shares, Leemis=T, ChoGains=F)
+# violations_calculator(a.dataframe) # won't work, not a matrix
+# violations_calculator(vote.shares, Leemis=T, ChoGains=F) # only returns m statistic
+
+
+
 
 
 #### Problem 2 ####
@@ -80,8 +85,8 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
 ## Function for hypothesis testing of Leemis m and Cho Gains d statistics
 #'
 #' This function takes an input of electoral returns and (optionally) conducts a hypothesis test
-#' of electoral fraud utilizing Leemis' m and Cho Gains' d statistics. This function recursively
-#' calls the violations_calculator() defined above.
+#' of electoral fraud utilizing Leemis' m and Cho Gains' d statistics. The null hypothesis is of
+#' no electoral fraud. This function recursively calls the violations_calculator() defined above.
 #' @param input An object with the class integer or matrix. If matrix, should be all integer values.
 #' @param Leemis Takes the value of TRUE or FALSE, where TRUE indicates that the function should
 #' test the null hypothesis of no electoral fraud using the Leemis' m statistic.
@@ -111,7 +116,7 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
     chogains_stars <- stars[chogains_critical + 1]
   }
   
-  our.table <- t(data.frame("* denotes p<0.1, **: p<0.05, ***:p<0.01"))
+  our.table <- t(data.frame("* denotes reject null hypothesis of no fraud at p<0.1, **: p<0.05, ***:p<0.01"))
   rownames(our.table) <- c("")
   colnames(our.table) <- "Statistic"  
   
@@ -125,6 +130,11 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
   }
   print(our.table)
 }
+
+# Seeing what the function does
+# print.benfords(vote.matrix)
+# votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
+# print.benfords(votes2)
 
 ## Function for writing output of print.benfords() to a .csv
 #'
@@ -158,9 +168,8 @@ sink.benfords <- function(input, Leemis=T, ChoGains=T, directory=NULL, filename=
   } 
 }
 
-# votes2 <- as.integer(c(1,1,1,1,1,1,1,1,1,1))
-# sink.benfords(input=votes2, directory="~/github/PS2",filename="/tableoutput.csv")
-
+# sink.benfords(input=votes2, directory="~/github/PS2",filename="/tableoutput.csv") # works
+# sink.benfords(input=votes2, directory="~/gearthub/PS2",filename="/tableoutput.csv") # invalid dir
 
 
 
