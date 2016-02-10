@@ -15,6 +15,7 @@ setwd("~/github/PS2") # Setting working directory
 #' calculate and return the Leemis' m statistic.
 #' @param ChoGains Takes the value of TRUE or FALSE, where TRUE indicates that the function should
 #' calculate and return the Cho Gains' d statistic.
+#' 
 #' @return A list with three elements: a frequency table of distribution of all first significant 
 #' digits of the elements within input, (if Leemis=T) the Leemis' m statistic, (if ChoGains=T) the
 #' Cho Gains' d statistic.
@@ -25,17 +26,17 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
   # Ensuring user inputs electoral returns in proper manner
   # Checks to see if object input is integer vector or matrix. If not, function stops running, 
   # and provides informative error message
-  if(class(input) %in% c("integer","matrix")) {
+  if (class(input) %in% c("integer","matrix")) {
   } else {
     stop("Please input election returns in integer vector or matrix format.")
   }
   
   # Ensuring that, if a matrix is input, it can be coerced to numeric vector
-  # And then doing such a manouver
+  # And then doing such a maneuver
   # That is, ensuring the user inputs raw vote totals, not letters or something
-  if(class(input) == "matrix") {
+  if (class(input) == "matrix") {
     input <- c(input)
-    if(class(input) != "integer"){
+    if (class(input) != "integer") {
       stop("Please fix your matrix to remove any non-integer values.")
     }
   }
@@ -51,12 +52,12 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
   final_list <- list(digit_distribution=first_digit_dist)
   
   # Then, calculating the Leemis m statistic if Leemis=T and assigning it to the list
-  if(Leemis==T){
+  if (Leemis==T) {
     m <- max(props - log10(1 + 1/c(1:9)))
     final_list <- c(final_list, m_statistic=m)
   }
   # Calculating the Cho-Gains d statistic if ChoGains=T and assigning it to the list
-  if(ChoGains==T){
+  if (ChoGains==T) {
     d <- sqrt(sum((props - log10(1 + 1/c(1:9)))^2))
     final_list <- c(final_list, d_statistic=d)
   }
@@ -95,6 +96,7 @@ violations_calculator <- function(input, Leemis=T, ChoGains=T){
 #' test the null hypothesis of no electoral fraud using the Leemis' m statistic.
 #' @param ChoGains Takes the value of TRUE or FALSE, where TRUE indicates that the function should
 #' test the null hypothesis of no electoral fraud using the Cho Gains' d statistic.
+#' 
 #' @return A table that denotes the name of each test statistic, the value of the test statistic,
 #' asterisks denoting the statistical significance of the test statistic, and a legend explaining
 #' the level of statistical significance the asterisks denote.  
@@ -110,11 +112,11 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
   # Vector of stars
   stars <- c("","*","**","***")
   
-  if(Leemis==T){
+  if (Leemis==T) {
     leemis_critical <- sum(earlier_list$m_statistic > leemis_cutoffs) 
     leemis_stars <- stars[leemis_critical + 1]
   }
-  if(ChoGains==T){
+  if (ChoGains==T) {
     chogains_critical <- sum(earlier_list$d_statistic > cho_gains_cutoffs) 
     chogains_stars <- stars[chogains_critical + 1]
   }
@@ -123,11 +125,11 @@ print.benfords <- function(input, Leemis=T, ChoGains=T){
   rownames(our.table) <- c("")
   colnames(our.table) <- "Statistic"  
   
-  if(Leemis==T){
+  if (Leemis==T) {
     our.table <- rbind(paste(round(earlier_list$m_statistic,5), leemis_stars, sep=""), our.table)
     rownames(our.table)[1] <- c("Leemis m")
   }
-  if(ChoGains==T){
+  if (ChoGains==T) {
     our.table <- rbind(paste(round(earlier_list$d_statistic,5), chogains_stars, sep=""), our.table)
     rownames(our.table)[1] <- c("Cho gains d")
   }
@@ -162,11 +164,11 @@ sink.benfords <- function(input, Leemis=T, ChoGains=T, directory=NULL, filename=
   # into directory and saved into filename. Then call print.benfords(). Then close sink() to end 
   # connection.
   # If directory doesn't exist, stops evaluation of function and asks user to specify valid path.
-  if (file.exists(directory) == T){
+  if (file.exists(directory) == T) {
     sink(file=paste(directory, filename, sep=""))
     print.benfords(input, Leemis, ChoGains)
     sink()
-  } else{
+  } else {
     stop("Invalid directory. Please specify a valid directory to save the file within.")
   } 
 }
